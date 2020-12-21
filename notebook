@@ -1,0 +1,57 @@
+#!/bin/bash
+
+
+function notebook()
+{
+	while [ true ]
+	do
+		clear
+		echo 'Notebook Lukas'
+		IFS=$'\n' read -d '' -r -a lines < ~/bin/notebook_storage.txt
+		declare -i x=1
+		for i in "${lines[@]}"
+		do
+			echo $x"\\" "$i"
+			((x=x+1))
+		done
+		
+		echo "_________________________________"
+		echo "add // delete // quit"
+		read command
+		if [ "$command" == "add" ]; then
+			echo "Insert new Item:"
+			read item
+			echo $item >> ~/bin/notebook_storage.txt
+		elif [ "$command" == "delete" ]; then
+			echo "Number of item to remove:"
+			read number
+			echo ${lines[$number]}
+			sed  -i "${number}d" ~/bin/notebook_storage.txt 
+		elif [ "$command" == "quit" ]; then
+			exit 0
+		else
+			echo "Invalid command!"
+		fi
+	done
+	
+}
+
+
+clear
+echo "Enter The Login Name:"
+read username
+echo "Enter The Password:"
+read -s password
+
+if [[ $username == "admin"  && $password == "secret" ]]
+then
+  echo -e "You're Logged In\n"
+  sleep 1
+  notebook
+elif [ $username != "admin" ] 
+then
+  echo -e "Invalid User Name\n"
+else
+  echo -e "Invalid Password\n"
+fi
+
